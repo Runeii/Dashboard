@@ -1,0 +1,7 @@
+{
+    "require": {
+        "sergeytsalkov/meekrodb": "*",
+        "php-curl-class/php-curl-class": "*",
+        "google/apiclient": "2.0"
+    }
+}

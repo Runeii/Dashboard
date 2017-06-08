@@ -1,0 +1,9 @@
+{
+  "node": true,
+  "esnext": true,
+  "curly": false,
+  "smarttabs": true,
+  "globals": {
+    "jQuery": true
+  }
+}
