@@ -2,6 +2,9 @@
     "require": {
         "sergeytsalkov/meekrodb": "*",
         "php-curl-class/php-curl-class": "*",
-        "google/apiclient": "2.0"
+        "google/apiclient": "2.0",
+        "facebook/graph-sdk": "^5.5",
+        "j7mbo/twitter-api-php": "^1.0",
+        "kint-php/kint": "^2.1"
     }
 }
