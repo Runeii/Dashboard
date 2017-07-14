@@ -30,14 +30,6 @@ Class Facebook{
     }
     return $response;
   }
-  function get_pages(){
-    $this->pages = DB::query("SELECT * FROM sources_facebook_pages");
-    return $this->pages;
-  }
-  function get_stats($id){
-    $this->stats = DB::query("SELECT * FROM sources_facebook_stats WHERE id=%", $id);
-    return $this->stats;
-  }
 
   function refresh_data(){
     $this->update_pages();
@@ -65,27 +57,32 @@ Class Facebook{
     }
   }
   function update_stats(){
-    $this->get_pages();
-    $metrics = array('page_posts_impressions', 'page_impressions_unique', 'page_fan_adds', 'page_fan_removes', 'page_post_engagements');
+    global $database;
+    $database->facebook_get_pages();
+    $day_metrics = array('page_posts_impressions', 'page_impressions_unique', 'page_fan_removes', 'page_post_engagements');
+    $lifetime_metrics = array('page_fans');
+
     foreach($this->pages as $page) {
-      $response = $this->make_call($page['id'] . '/insights?metric=' . json_encode($metrics) . '&period=day', $page['access_token']);
-      $results = array();
+      $response = $this->make_call($page['id'] . '/insights?metric=' . json_encode($day_metrics) . '&period=day', $page['access_token']);
+      $results = array(
+        'id' => $page['id'],
+        'date' =>date("Y-m-d", strtotime('today'))
+      );
+
       $data = $response->getGraphEdge()->asArray();
       foreach($data as $metric) {
         $total = 0;
         foreach($metric['values'] as $value) {
           $total += $value['value'];
         }
-        $results[] = array(
-          'name' => $metric['name'],
-          'value' => $total
-        );
+        $results[$metric['name']] = $total;
       }
-      $this->stats[] = array(
-        'id' => $page['id'],
-        'date' => date("Y-m-d", strtotime('yesterday')),
-        'data' => json_encode($results)
-      );
+      $response = $this->make_call($page['id'] . '/insights?metric=' . json_encode($lifetime_metrics) . '&period=lifetime&since='. strtotime('today') .'&until='. strtotime('today'), $page['access_token']);
+      $data = $response->getGraphEdge()->asArray();
+      foreach($data as $metric) {
+        $results[$metric['name']] = $metric['values'][0]['value'];
+      }
+      $this->stats[] = $results;
     }
     DB::replace('sources_facebook_data', $this->stats);
   }

@@ -7,7 +7,6 @@ Class Twitter{
 
   function __construct(){
     $this->setup();
-    $this->get_sites();
   }
   function setup(){
     $this->keys = array(
@@ -32,9 +31,6 @@ Class Twitter{
     $stats = $this->update_stats();
   }
 
-  function get_sites(){
-    $this->accounts = DB::query("SELECT * FROM sources_twitter_sites");
-  }
   function update_sites(){
     $accountdata = json_decode($this->make_call('users/lookup.json',  'screen_name=' . implode(",", $this->settings['accounts'])));
     foreach($accountdata as $account) {
@@ -48,10 +44,11 @@ Class Twitter{
       );
       DB::replace('sources_twitter_sites', $entry);
     }
-    $this->get_sites();
+    global $database;
+    $this->accounts = $database->twitter_get_sites();
+
   }
   function update_stats(){
-    $offset = strtotime("-1 week");
     foreach($this->settings['accounts'] as $screen_name){
       $this->datarecord = array(
         'totals' => array(
@@ -66,14 +63,14 @@ Class Twitter{
       $this->search_mentions($screen_name);
       $this->calculate_engagement();
 
-      $this->store_data($screen_name, $this->datarecord);
+      $this->store_data($screen_name);
     }
   }
   function search_tweets($screen_name, $offset = null){
     $i = 1;
     if($offset != null) {
       $timeline = json_decode($this->make_call('statuses/user_timeline.json',  'screen_name=' . $screen_name . '&include_rts=false&exclude_replies=false&count=30&max_id=' . $offset));
-    } else {  
+    } else {
       $timeline = json_decode($this->make_call('statuses/user_timeline.json',  'screen_name=' . $screen_name . '&include_rts=false&exclude_replies=false&count=30'));
     }
     foreach($timeline as $post) {
@@ -103,7 +100,7 @@ Class Twitter{
   function search_mentions($screen_name, $offset = null){
     if($offset != null) {
       $timeline = json_decode($this->make_call('search/tweets.json',  'q=@' . $screen_name .'&count=100&max_id=' . $offset));
-    } else {  
+    } else {
       $timeline = json_decode($this->make_call('search/tweets.json',  'q=@' . $screen_name .'&count=100'));
     }
     foreach($timeline->statuses as $status){
@@ -124,20 +121,30 @@ Class Twitter{
     foreach($this->datarecord as $post) {
       //Skip "totals" entry
       if($i === 0) {
-        $this->datarecord['totals']['engagement'] = (($post['favs'] + $post['retweets'] + $post['mentions']) / $this->datarecord['totals']['followers']) * 100;    
+        $this->datarecord['totals']['engagement'] = (($post['favs'] + $post['retweets'] + $post['mentions']) / $this->datarecord['totals']['followers']) * 100;
       } else {
-        $this->datarecord[$post['id']]['engagement'] = (($post['favs'] + $post['retweets'] + $post['replies']) / $this->datarecord['totals']['followers']) * 100;    
+        $this->datarecord[$post['id']]['engagement'] = (($post['favs'] + $post['retweets'] + $post['replies']) / $this->datarecord['totals']['followers']) * 100;
       }
       $i++;
     }
   }
-  function store_data($account, $value, $time = 'today'){
-    $entry = array(
-      'account' => $account,
-      'date' => date("Y-m-d", strtotime($time)),
-      'value' => json_encode($value)
-    );
-    DB::insert('sources_twitter_data', $entry);
+  function store_data($account){
+    //Move totals to root of Array
+    $entry = array();
+    $entry['account'] = $account;
+    $entry['date'] = date("Y-m-d", strtotime('today'));
+    $entry['followers'] = $this->datarecord['totals']['followers'];
+    $entry['friends'] = $this->datarecord['totals']['friends'];
+    $entry['favs'] = $this->datarecord['totals']['favs'];
+    $entry['retweets'] = $this->datarecord['totals']['retweets'];
+    $entry['mentions'] = $this->datarecord['totals']['mentions'];
+    $entry['engagement'] = $this->datarecord['totals']['engagement'];
+    unset($this->datarecord['totals']);
+
+    //Encode posts data
+    $entry['posts'] = json_encode($this->datarecord);
+    //Store it
+    DB::replace('sources_twitter_data', $entry);
   }
 }
 ?>

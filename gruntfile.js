@@ -4,24 +4,24 @@ module.exports = function(grunt) {
 
     watch: {
       php: {
-        files: ['**/*.php']
+        files: ['*.php', 'includes/**/*.php'],
+        tasks: ['notify:php']
       },
       sass: {
-        files: 'assets/sass/*.scss',
-        tasks: ['sass:dev', 'notify:successCss'],
+        files: 'assets/sass/screen.scss',
+        tasks: ['sass:dev', 'notify:sass'],
       },
       js: {
         files: [
-          'assets/js/src/*.js',
-          'Gruntfile.js'
+          'assets/js/src/*.js'
         ],
-        tasks: ['babel','concat','uglify:scripts','notify:successJs']
+        tasks: ['babel', 'concat','notify:js']
       }
     },
     php: {
       default : {
         options: {
-				  hostname: '127.0.0.1',
+				  hostname: 'localhost',
         	port: 8010,
   				keepalive: false,
   				open: false
@@ -31,40 +31,34 @@ module.exports = function(grunt) {
     browserSync: {
       files: {
         src : [
-          'assets/css/*.css',
-          'assets/js/*.js',
-          '**/*.html',
-          '**/*.php'
+          'assets/css/style-min.css',
+          'assets/js/scripts-min.js',
+          '*.php',
+          'includes/**/*.php'
         ],
       },
       options: {
         watchTask: true,
-        notify: true,
+        notify: false,
         open: true,
         port: '8080',
-				proxy: '<%= php.default.options.hostname %>:<%= php.default.options.port %>',
-				ghostMode: {
-					clicks: true,
-					scroll: true,
-					links: true,
-					forms: true
-				}
+				proxy: '<%= php.default.options.hostname %>:<%= php.default.options.port %>'
       }
     },
     sass: {
-        options: {
-            sourceMap: true
-        },
-        dev: {
-            files: {
-              'assets/css/style-min.css': 'assets/sass/screen.scss'
-            }
-        },
-        dist: {
-            files: {
-              'assets/css/style.css': 'assets/sass/screen.scss'
-            }
+      options: {
+          sourceMap: true
+      },
+      dev: {
+        files: {
+          'assets/css/style-min.css': 'assets/sass/screen.scss'
         }
+      },
+      dist: {
+        files: {
+          'assets/css/style.css': 'assets/sass/screen.scss'
+        }
+      }
     },
     postcss: {
       options: {
@@ -88,12 +82,16 @@ module.exports = function(grunt) {
     },
     babel: {
         options: {
-            presets: ['env']
+            presets: ['env'],
+            sourceMap: true
         },
         dist: {
-            files: {
-                'assets/js/src/main-babel.js': 'assets/js/src/main.js'
-            }
+            files: [{
+                expand: true,
+                cwd: 'assets/js/src/',
+                src: ['*.js', '!sources.js'],
+                dest: 'assets/js/babel/'
+            }]
         }
     },
     concat: {
@@ -102,40 +100,35 @@ module.exports = function(grunt) {
         stripBanners: true
       },
       stageone: {
-        src: ['assets/js/src/sources.js','assets/js/src/main-babel.js'],
-        dest: 'assets/js/scripts-concat.js',
+        src: ['assets/js/src/sources.js','assets/js/babel/*.js'],
+        dest: 'assets/js/scripts-min.js',
       }
-    },
-    uglify: {
-      scripts: {
-        files: {
-          'assets/js/scripts-min.js': ['assets/js/scripts-concat.js']
-        },
-      },
     },
     notify: {
       options: {
         enabled: true,
-        success: true,
-        duration: 3
+        max_jshint_notifications: 5, // maximum number of notifications from jshint output
+        title: "Comms Dashboard", // defaults to the name in package.json, or will use project directory's name
+        success: true, // whether successful grunt executions should be notified automatically
+        duration: 3 // the duration of notification in seconds, for `notify-send only
       },
-      successCss: {
-          options:{
-              title: "Grunt successful",
-              message: "All CSS tasks complete"
-          }
+      sass: {
+        options: {
+          title: 'SASS Compiled',  // optional
+          message: 'Pushing updated files to browser', //required
+        }
       },
-      successJs: {
-          options:{
-              title: "Grunt successful",
-              message: "All JS tasks complete"
-          }
+      php: {
+        options: {
+          title: 'PHP changed',  // optional
+          message: 'Pushing updated files to browser', //required
+        }
       },
-      successProduction: {
-          options:{
-              title: "Grunt successful",
-              message: "Project prepared for production"
-          }
+      js: {
+        options: {
+          title: 'JS Compiled',  // optional
+          message: 'Pushing updated files to browser', //required
+        }
       }
     }
   });
@@ -151,10 +144,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   //JS
   grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-babel');
   // Register the default tasks.
 
-  grunt.registerTask('default', ['php', 'browserSync', 'watch', 'notify']);
-  grunt.registerTask('prod', ['sass:dist', 'postcss', 'cssmin','babel','concat','uglify:scripts', 'notify:successProduction']);
+  grunt.registerTask('default', ['php', 'browserSync', 'watch']);
+  grunt.registerTask('prod', ['sass:dist', 'postcss', 'cssmin','babel','concat']);
 };
