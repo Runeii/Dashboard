@@ -7,7 +7,8 @@ class Instagram{
 
   function __construct(){
     $this->token = '1332324521.068e5a0.9b6f62bb08774359a5c4bb53a574106a';
-    $this->brands = array('HoochLemonBrew');
+    $BrandDB = new Brands();
+    $this->brands = $BrandDB->get_brand_profiles('instagram');
   }
 
   function calculate_engagement($likes, $comments, $followers){
@@ -23,7 +24,6 @@ class Instagram{
     foreach($this->brands as $brand) {
       $user = json_decode(file_get_contents('https://www.instagram.com/'. $brand .'/?__a=1'))->user;
       if(is_object($user)) {
-        DB::query("TRUNCATE TABLE sources_instagram_accounts");
         $entry = array(
           'id' => $user->id,
           'username' => $user->username,
@@ -33,16 +33,15 @@ class Instagram{
           'current_following' => $user->follows->count,
           'current_followers' => $user->followed_by->count
         );
-        DB::insert('sources_instagram_accounts', $entry);
+        DB::replace('sources_instagram_accounts', $entry);
       }
     }
   }
   function update_stats(){
     global $database;
     $this->accounts = $database->instagram_get_accounts();
-
     foreach($this->accounts as $account) {
-      $posts = json_decode(file_get_contents('https://api.instagram.com/v1/users/'. $account['id'] .'/media/recent/?access_token='. $this->token));
+      $posts = json_decode(file_get_contents('https://www.instagram.com/'. $account['username'] .'/?__a=1'))->user->media->nodes;
       $offset = strtotime("yesterday");
       $day = array(
         'totals' => array(
@@ -51,8 +50,8 @@ class Instagram{
           'engagement' => 0,
         )
       );
-      foreach($posts->data as $post) {
-        if($post->created_time > $offset) {
+      foreach($posts as $post) {
+        if($post->date > $offset) {
           $day['totals']['likes'] += $post->likes->count;
           $day['totals']['comments'] += $post->comments->count;
           $engagement = $this->calculate_engagement($post->likes->count, $post->comments->count, $account['current_followers']);
@@ -61,8 +60,8 @@ class Instagram{
             'likes' => $post->likes->count,
             'engagement' => $engagement,
             'comments' => $post->comments->count,
-            'link' => $post->link,
-            'images' => $post->images
+            'link' => $post->code,
+            'image' => $post->display_src
           );
         } else {
           break;

@@ -2,6 +2,7 @@
 
 //Cached elements
 var menu = document.querySelector('body > nav');
+var main = document.querySelector('body > main');
 
 //Variables
 var menuoffset = menu.getBoundingClientRect().top,

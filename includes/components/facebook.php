@@ -82,7 +82,15 @@ Class Facebook{
       foreach($data as $metric) {
         $results[$metric['name']] = $metric['values'][0]['value'];
       }
-      $this->stats[] = $results;
+      $this->stats[] = array(
+        'date' => $results['date'],
+        'id' => $results['id'],
+        'Page Impressions' => $results['page_posts_impressions'],
+        'Post Impressions' => $results['page_impressions_unique'],
+        'Unlikes' => $results['page_fan_removes'],
+        'Engagements' => $results['page_post_engagements'],
+        'Fans' => $results['page_fans']
+      );
     }
     DB::replace('sources_facebook_data', $this->stats);
   }

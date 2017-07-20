@@ -15,8 +15,9 @@ Class Twitter{
         'consumer_key' => "22F85O98SQDUJ54FF9rTv8zwU",
         'consumer_secret' => "wPMzAABC6P8D8IYbqFT3B5zDWwgW5j0vuP2zxv3UPYnBQ7vY7C"
     );
+    $BrandDB = new Brands();
     $this->settings = array(
-      'accounts' => array('HoochLemonBrew', 'CrookedBevCo')
+      'accounts' => $BrandDB->get_brand_profiles('twitter')
     );
   }
   function make_call($endpoint, $data, $method = 'GET'){

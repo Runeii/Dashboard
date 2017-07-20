@@ -264,30 +264,62 @@ body {
   filter: blur(10px);
   z-index: 1; }
 
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #1f5b74;
+  width: 100%;
+  height: 57px;
+  z-index: 51;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 30px;
+  line-height: 57px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end; }
+  header img {
+    width: 200px;
+    margin: 0 57px 0 0; }
+  header .actions {
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+    margin: 0; }
+    header .actions li {
+      list-style: none;
+      padding-right: 30px; }
+
 nav {
   position: relative;
   height: 100vh;
   max-width: 200px;
   width: 20%;
-  background-color: #37474F;
-  z-index: 2;
+  background-color: #1f5b74;
+  z-index: 50;
   float: left;
-  padding: 22px;
-  color: rgba(255, 255, 255, 0.8); }
-  nav.fixed {
-    position: fixed;
-    top: 0;
-    left: 0; }
-  nav .actions {
-    display: flex;
-    flex-direction: row;
-    padding: 0;
-    justify-content: flex-end; }
-    nav .actions li {
+  padding: 57px 22px 22px;
+  color: rgba(255, 255, 255, 0.8);
+  position: fixed;
+  top: 0;
+  left: 0; }
+  nav .brands {
+    margin: 30px 0 0;
+    padding: 0; }
+    nav .brands li {
       list-style: none;
-      padding-right: 30px; }
-    nav .actions li:last-child {
-      padding-right: 0; }
+      width: 80%;
+      margin-left: 20%;
+      opacity: 0.5;
+      transform-origin: right;
+      transition: all 0.5s;
+      padding: 0 0 22px;
+      cursor: pointer; }
+      nav .brands li:hover, nav .brands li.active {
+        opacity: 1; }
+      nav .brands li img {
+        width: 100%; }
 
 main {
   position: relative;
@@ -298,23 +330,29 @@ main {
   min-height: 100vh;
   float: right;
   color: #6e6e6e;
-  padding: 22px 0 0 22px;
+  padding: 79px 0 0 22px;
   display: flex;
-  flex-wrap: wrap; }
+  flex-wrap: wrap;
+  justify-content: space-between; }
 
-article {
+article, #network-overview {
   background-color: #ffffff;
-  margin: 0;
-  margin-top: 22px;
-  border: 22px solid #eef1f5;
-  border-top-width: 0;
-  border-left-width: 0;
+  margin-bottom: 22px;
   position: relative;
-  overflow: hidden;
-  padding: 16px 16px 16px; }
-  article canvas {
+  width: calc(50% - 16px);
+  padding: 16px;
+  box-shadow: 0 1px 3px transparent, 0 2px 2px rgba(0, 0, 0, 0.1); }
+  article canvas, #network-overview canvas {
     width: 100%; }
-  article > h5 {
+  article::after, #network-overview::after {
+    content: '';
+    background-color: #eef1f5;
+    position: absolute;
+    right: -3px;
+    left: 100%;
+    top: 0;
+    bottom: calc(100% - 22px); }
+  article > h5, article .bar h5, #network-overview > h5, #network-overview .bar h5 {
     margin-top: 0;
     background-color: #ffffff;
     position: relative;
@@ -323,7 +361,7 @@ article {
     font-size: 16px;
     margin: 0;
     font-weight: 700; }
-    article > h5::after {
+    article > h5::after, article .bar h5::after, #network-overview > h5::after, #network-overview .bar h5::after {
       display: block;
       content: " ";
       position: absolute;
@@ -345,28 +383,45 @@ article {
       -ms-box-shadow: 0 1px 3px transparent, 1px 0px 0px rgba(100, 100, 100, 0.05);
       -moz-box-shadow: 0 1px 3px transparent, 1px 0px 0px rgba(100, 100, 100, 0.05);
       -webkit-box-shadow: 0 1px 3px transparent, 1px 0px 0px rgba(100, 100, 100, 0.05); }
-  article a {
+  article .bar, #network-overview .bar {
+    display: flex;
+    flex-direction: row; }
+    article .bar h5.tab, #network-overview .bar h5.tab {
+      z-index: 2;
+      padding: 0 16px;
+      background-color: #eef1f5;
+      color: rgba(110, 110, 110, 0.4);
+      transition: color 0.5s, background-color 0.5s;
+      cursor: pointer; }
+      article .bar h5.tab:hover, article .bar h5.tab.active, #network-overview .bar h5.tab:hover, #network-overview .bar h5.tab.active {
+        background-color: #ffffff;
+        color: #6e6e6e; }
+      article .bar h5.tab:nth-of-type(2), #network-overview .bar h5.tab:nth-of-type(2) {
+        margin-left: auto; }
+      article .bar h5.tab::after, #network-overview .bar h5.tab::after {
+        display: none; }
+  article a, #network-overview a {
     color: #6e6e6e;
     text-decoration: none; }
-  article i {
+  article i, #network-overview i {
     padding-right: 22px; }
-  article table {
+  article table, #network-overview table {
     padding: 22px 0;
     width: 100%; }
-    article table tr {
+    article table tr, #network-overview table tr {
       height: 30px; }
-      article table tr:nth-child(even) {
+      article table tr:nth-child(even), #network-overview table tr:nth-child(even) {
         background-color: #eef1f5; }
-    article table td, article table th {
+    article table td, article table th, #network-overview table td, #network-overview table th {
       text-align: left;
       border: none;
       border-collapse: collapse;
       border-spacing: 0px; }
-      article table td:first-child, article table th:first-child {
+      article table td:first-child, article table th:first-child, #network-overview table td:first-child, #network-overview table th:first-child {
         text-align: center; }
-      article table td:not(:last-child), article table th:not(:last-child) {
+      article table td:not(:last-child), article table th:not(:last-child), #network-overview table td:not(:last-child), #network-overview table th:not(:last-child) {
         padding-right: 22px; }
-      article table td:last-child, article table th:last-child {
+      article table td:last-child, article table th:last-child, #network-overview table td:last-child, #network-overview table th:last-child {
         text-align: right; }
 
 #last-updated {
@@ -374,24 +429,88 @@ article {
   #last-updated i {
     padding-right: 30px; }
 
-#social-followers {
-  padding: 22px;
-  width: 50%;
-  height: calc(50vw - 200px); }
+#social-followers .body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px; }
 
-.network-overview {
-  width: 25%; }
+#network-overview {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: stretch;
+  overflow: visible;
+  background-color: #eef1f5;
+  box-shadow: none;
+  padding: 0;
+  z-index: 3; }
+  #network-overview::after {
+    display: none; }
+  #network-overview article {
+    width: 100%;
+    margin-bottom: 0; }
+  #network-overview .body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%; }
+  #network-overview .statistic {
+    text-align: center;
+    padding: 0 16px 16px; }
+    #network-overview .statistic .positive {
+      color: #54bb54; }
+      #network-overview .statistic .positive + .statcaption {
+        color: #54bb54; }
+    #network-overview .statistic .negative {
+      color: #f13c3c; }
+      #network-overview .statistic .negative + .statcaption {
+        color: #f13c3c; }
+    #network-overview .statistic .statcaption {
+      font-size: 0.667em;
+      display: block;
+      line-height: 1;
+      opacity: 0.6; }
 
 #website-referrals {
-  width: 100%; }
+  width: 100%;
+  margin-right: 0; }
+  #website-referrals .body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center; }
   #website-referrals .overview {
-    width: 40%; }
-    #website-referrals .overview canvas {
-      width: 50%; }
+    padding: 42px 0;
+    width: 40%;
+    position: relative; }
   #website-referrals .details {
-    width: 25%; }
+    width: 20%;
+    padding: 42px 0;
+    display: flex;
+    flex-direction: column; }
+    #website-referrals .details .graph:first-child {
+      padding-bottom: 42px; }
 
-#website-landing-list, #website-popular-list {
-  width: 50%; }
+#website-landing-list {
+  z-index: 3; }
+
+.settings-form {
+  width: calc(100% - 16px); }
+  .settings-form #client_table .hiddenrow, .settings-form #client_table .idholder {
+    display: none; }
+  .settings-form #client_table th {
+    text-align: left;
+    font-weight: 700; }
+  .settings-form #client_table td {
+    text-align: left; }
+  .settings-form #client_table img {
+    height: 6rem;
+    margin: 0 auto; }
+
+*[data-navigate] {
+  cursor: pointer; }
 
 /*# sourceMappingURL=style-min.css.map */

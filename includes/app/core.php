@@ -3,6 +3,19 @@
   define( 'NOTICESLOG', DASHROOT . '/logs/notices_' . date('dmy') );
   define( 'ERRORLOG', DASHROOT . '/logs/error_' . date('dmy') );
 
+  function customlog($message, $type = 'error', $append = true) {
+    if($type === 'error') {
+      $file = ERRORLOG;
+    } else {
+      $file = NOTICESLOG;
+    }
+    if($append === true) {
+      file_put_contents($file, $message, 0, $flag, FILE_APPEND);
+    } else {
+      file_put_contents($file, $message, 0, $flag);
+    }
+  }
+
   require_once DASHROOT . '/vendor/autoload.php';
 
   DB::$user = 'gb_dashboard';
@@ -11,6 +24,9 @@
 
   require_once DASHROOT .'/includes/connectors/db.php';
   $database = new DBAccess();
+
+  require_once DASHROOT .'/includes/connectors/brands.php';
+  $BrandDB = new Brands();
 
   require_once DASHROOT .'/includes/components/analytics.php';
   $analytics = new Google_Data();

@@ -22,13 +22,14 @@
       require_once( __DIR__ . '/../app/core.php');
       $this->database = new DBAccess;
 
-      $this->brand = array(
-        'name' => 'Hooch',
-        'facebook' => '324061324349286',
-        'twitter' => 'HoochLemonBrew',
-        'instagram' => 'hoochlemonbrew',
-        'analytics' => '21183180'
-      );
+      $BrandDB = new Brands();
+      $this->brand = $BrandDB->get_brands($_GET['client'])[0];
+      $this->networks = $this->brand;
+      unset($this->networks['name']);
+      unset($this->networks['analytics']);
+      unset($this->networks['id']);
+      unset($this->networks['logo']);
+
       $this->chartDefaults = '
         Chart.defaults.global.defaultFontColor = "rgba(0, 0, 0, 0.6)";
         Chart.defaults.global.defaultFontFamily = "open-sans", "helvetica", "sans-serif";
@@ -39,6 +40,7 @@
 
       $this->setup_daterange();
     }
+
 
     //
     // Structure date range
@@ -61,8 +63,8 @@
     //
     // Chart options
     //
-    function chart_options(){
-      $options = array(
+    function chart_default_options(){
+      $args = array(
         'response' => true,
         'tooltips' => array(
           'mode' => 'index',
@@ -84,15 +86,20 @@
           )
         ) )
       );
+      $options = $this->chart_options($args);
       return json_encode($options);
     }
-    function chart_options_pie(){
-      $options = array(
+    function chart_default_options_pie(){
+      $args = array(
         'animation' => array(
           'animateScale' => true
         )
       );
+      $options = $this->chart_options($args);
       return json_encode($options);
+    }
+    function chart_options($args) {
+      return $args;
     }
     function generate_piecolours($dataset){
       $total = count($dataset);
@@ -110,7 +117,9 @@
     //
     function outputWidget(){
       echo $this->buildWidgetHeader();
-      $this->widgetBody();
+      echo '<div class="body">';
+        $this->widgetBody();
+      echo '</div>';
       echo $this->closeWidget();
     }
     function buildWidgetHeader($id = false, $icon = false, $title = false){
@@ -128,15 +137,32 @@
       return '</article>';
     }
     function widgetBody(){
-      echo '<script type="text/javascript">
-        var ctx = document.getElementById("social-followers-chart").getContext("2d");
-        var myChart = new Chart(ctx, {
-            type: "line",
-            data: '. $this->build_dataset() .',
-            options: '. $this->chart_options() .'
-        });
-        '. $this->chartDefaults .'
-      </script>';
+      // Child widgets will hook in to this to build content.
+      echo '<canvas id="'. $this->id .'-chart" width="400" height="400"></canvas>';
+      $this->build_chart();
+    }
+    function build_chart($dataset = 'default'){
+      if($this->chart_type === 'line') {
+        echo '<script type="text/javascript">
+          var ctx = document.getElementById("'. $this->id .'-chart").getContext("2d");
+          var myChart = new Chart(ctx, {
+              "type": "line",
+              "data": '. $this->build_dataset() .',
+              "options": '. $this->chart_default_options() .'
+          });
+          '. $this->chartDefaults .'
+        </script>';
+      }else if($this->chart_type === 'doughnut') {
+        echo '<script type="text/javascript">
+          var ctx = document.getElementById("'. $this->id .'-chart").getContext("2d");
+          var myChart = new Chart(ctx, {
+              "type": "doughnut",
+              "data": '. $this->build_dataset() .',
+              "options": '. $this->chart_default_options_pie() .'
+          });
+          '. $this->chartDefaults .'
+        </script>';
+      }
     }
     /*
     //Build dataset
@@ -174,9 +200,9 @@
     //
     //Format data
     //
-    function format_twitterstats(){
+    function format_twitterstats($start, $end = null){
       global $twitter;
-      $twitterstats = $twitter->get_stats($this->brand['twitter'], $this->daterange);
+      $twitterstats = $twitter->get_stats($this->brand['twitter'], $start, $end);
       $dataset = $this->blank_dataset();
       foreach($twitterstats as $date => $data) {
         $offset = array_search($date, $this->dates);
@@ -187,9 +213,9 @@
       return $dataset;
     }
 
-    function format_facebookstats(){
+    function format_facebookstats($start, $end = null){
       global $facebook;
-      $fbstats = $facebook->get_stats($this->brand['facebook'], $this->daterange);
+      $fbstats = $facebook->get_stats($this->brand['facebook'], $start, $end);
       $dataset = $this->blank_dataset();
       foreach($fbstats as $day) {
         $offset = array_search($day['date'], $this->dates);
@@ -203,9 +229,9 @@
       }
       return $dataset;
     }
-    function format_instagramstats(){
+    function format_instagramstats($start, $end = null){
       global $instagram;
-      $instastats = $instagram->get_stats($this->brand['instagram'], $this->daterange);
+      $instastats = $instagram->get_stats($this->brand['instagram'], $start, $end);
       $dataset = $this->blank_dataset();
       foreach($instastats as $day) {
         $offset = array_search($day['date'], $this->dates);

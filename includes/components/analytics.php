@@ -9,6 +9,7 @@ Class Google_Data{
   function __construct(){
     $this->analytics = $this->initializeAnalytics();
     $this->reporting = $this->initializeAnalyticsReporting();
+    $this->errorTiming = 0;
   }
 
   //Updating
@@ -47,7 +48,6 @@ Class Google_Data{
   //Stats
   function update_all_stats(){
     foreach($this->sites as $site) {
-      echo $site['name'] . '<br />';
       $this->update_stats($site['viewid']);
     }
   }
@@ -59,7 +59,9 @@ Class Google_Data{
     $this->get_toppages();
     $this->get_toplandingpages();
     $this->get_referrals();
+    $this->get_socialreferrals();
 
+    $this->commit_data();
   }
 
   function get_averagetime() {
@@ -137,23 +139,39 @@ Class Google_Data{
     $this->store_data('referrals', $reply);
     return $reply;
   }
+  function get_socialreferrals() {
+    $args = array(
+      'metrics' => array('ga:sessions', 'ga:pageViews'),
+      'dimensions' => 'ga:socialNetwork',
+      'sort' => array('ga:sessions', 'DESCENDING')
+    );
+    $dataset = $this->get_dataset($args);
 
-  function store_data($key, $value, $time = 'yesterday'){
+    $reply = array();
+
+    $rows = $dataset[0]->getData()->getRows();
+    foreach($rows as $row) {
+      $reply[] = array(
+        'socialNetwork' => $row->getDimensions()[0],
+        'sessions' => $row->getMetrics()[0]->getValues()[0],
+        'views' => $row->getMetrics()[0]->getValues()[1]
+      );
+    }
+    $this->store_data('socialreferrals', $reply);
+    return $reply;
+  }
+  function store_data($key, $data){
+    $this->data[$key] = $data;
+  }
+  function commit_data(){
     $entry = array(
       'id' => 0, //autoincrements
       'UAId' => $this->current_view_id,
-      'key' => $key,
-      'value' => json_encode($value),
-      'date' => date("Y-m-d", strtotime($time))
+      'value' => json_encode($this->data),
+      'date' => date("Y-m-d", strtotime('today'))
     );
-    DB::insert('sources_googleanalytics_data', $entry);
+    DB::replace('sources_googleanalytics_data', $entry);
     $new_row = DB::insertId();
-
-    $entry = array(
-      'id' => $new_row,
-      'UAId' => $this->current_view_id
-    );
-    DB::insert('sources_googleanalytics_datamap', $entry);
   }
 
   function get_dataset($args = array()){
@@ -213,7 +231,22 @@ Class Google_Data{
 
     $body = new Google_Service_AnalyticsReporting_GetReportsRequest();
     $body->setReportRequests( array( $request) );
-    return $this->reporting->reports->batchGet( $body );
+    //Update catch errors, deploy exponential backoff if errors
+    try {
+      $response = $this->reporting->reports->batchGet( $body );
+      return $response;
+    } catch (Google_Service_Exception $e) {
+      if($e->getCode() == 429) {
+        customlog('Hit Google API limit, code ' . $e->getCode() . ': ' . $e->getMessage(), 'notice');
+        $this->errorTiming += 2;
+        customlog('Will wait ' . $this->errorTiming . ' seconds before proceeding.', 'notice');
+        sleep($this->errorTiming);
+        return $this->get_dataset($args);
+      } else {
+        customlog('Fatal Google API error, code ' . $e->getCode() . ': ' . $e->getMessage());
+        die();
+      }
+    }
   }
 
   function initializeAnalytics() {

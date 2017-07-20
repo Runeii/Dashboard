@@ -48,8 +48,11 @@ class WebsitePages extends GBWidget{
   function format_data(){
     $data = $this->database->analytics_get_stats($this->brand['analytics'], $this->daterange);
     $this->data = array();
-    foreach($data as $item) {
-      $this->data[$item['key']][$item['date']] = json_decode($item['value']);
+    foreach($data as $day) {
+      $data = json_decode($day['value']);
+      foreach($data as $metric => $value) {
+        $this->data[$metric][$day['date']] = $value;
+      }
     }
   }
 }
