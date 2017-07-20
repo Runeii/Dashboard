@@ -168,16 +168,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.11",
+            "version": "v0.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/google/google-api-php-client-services.git",
-                "reference": "48c554aee06f2fd5700d7bdfa4fa6b82d184eb52"
+                "reference": "9eaaa1062fa2a7cd2d16d3b5ab39efc0bc02a37e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-api-php-client-services/zipball/48c554aee06f2fd5700d7bdfa4fa6b82d184eb52",
-                "reference": "48c554aee06f2fd5700d7bdfa4fa6b82d184eb52",
+                "url": "https://api.github.com/repos/google/google-api-php-client-services/zipball/9eaaa1062fa2a7cd2d16d3b5ab39efc0bc02a37e",
+                "reference": "9eaaa1062fa2a7cd2d16d3b5ab39efc0bc02a37e",
                 "shasum": ""
             },
             "require": {
@@ -201,7 +201,7 @@
             "keywords": [
                 "google"
             ],
-            "time": "2017-03-13T17:40:44+00:00"
+            "time": "2017-07-13T19:18:11+00:00"
         },
         {
             "name": "google/auth",
@@ -474,16 +474,16 @@
         },
         {
             "name": "kint-php/kint",
-            "version": "2.1",
+            "version": "2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kint-php/kint.git",
-                "reference": "17ec4f2393560ea857f7e72ada106f489cb1e277"
+                "reference": "1a1104729f10277b06d7db742d3c98d1881d4d7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kint-php/kint/zipball/17ec4f2393560ea857f7e72ada106f489cb1e277",
-                "reference": "17ec4f2393560ea857f7e72ada106f489cb1e277",
+                "url": "https://api.github.com/repos/kint-php/kint/zipball/1a1104729f10277b06d7db742d3c98d1881d4d7e",
+                "reference": "1a1104729f10277b06d7db742d3c98d1881d4d7e",
                 "shasum": ""
             },
             "require": {
@@ -528,20 +528,20 @@
                 "kint",
                 "php"
             ],
-            "time": "2017-05-13T17:24:30+00:00"
+            "time": "2017-07-03T20:08:05+00:00"
         },
         {
             "name": "monolog/monolog",
-            "version": "1.22.1",
+            "version": "1.23.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "1e044bc4b34e91743943479f1be7a1d5eb93add0"
+                "reference": "fd8c787753b3a2ad11bc60c063cff1358a32a3b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1e044bc4b34e91743943479f1be7a1d5eb93add0",
-                "reference": "1e044bc4b34e91743943479f1be7a1d5eb93add0",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/fd8c787753b3a2ad11bc60c063cff1358a32a3b4",
+                "reference": "fd8c787753b3a2ad11bc60c063cff1358a32a3b4",
                 "shasum": ""
             },
             "require": {
@@ -562,7 +562,7 @@
                 "phpunit/phpunit-mock-objects": "2.3.0",
                 "ruflin/elastica": ">=0.90 <3.0",
                 "sentry/sentry": "^0.13",
-                "swiftmailer/swiftmailer": "~5.3"
+                "swiftmailer/swiftmailer": "^5.3|^6.0"
             },
             "suggest": {
                 "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
@@ -606,7 +606,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2017-03-13T07:08:03+00:00"
+            "time": "2017-06-19T01:22:40+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -658,16 +658,16 @@
         },
         {
             "name": "php-curl-class/php-curl-class",
-            "version": "7.3.0",
+            "version": "7.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-curl-class/php-curl-class.git",
-                "reference": "66d0afcb48e652960df90bc0864c38ce89b10782"
+                "reference": "0dcf0230ef7b1cc49d5f8c1a3457acb325ab3707"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-curl-class/php-curl-class/zipball/66d0afcb48e652960df90bc0864c38ce89b10782",
-                "reference": "66d0afcb48e652960df90bc0864c38ce89b10782",
+                "url": "https://api.github.com/repos/php-curl-class/php-curl-class/zipball/0dcf0230ef7b1cc49d5f8c1a3457acb325ab3707",
+                "reference": "0dcf0230ef7b1cc49d5f8c1a3457acb325ab3707",
                 "shasum": ""
             },
             "require": {
@@ -711,7 +711,7 @@
                 "web service",
                 "xml"
             ],
-            "time": "2017-05-01T08:11:43+00:00"
+            "time": "2017-06-27T23:57:16+00:00"
         },
         {
             "name": "phpseclib/phpseclib",

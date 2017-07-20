@@ -45,7 +45,6 @@ Thumbs.db
 # NPM package files (always run npm install)
 ######################
 node_modules/
-vendor/
 
 assets/includes/components/ga-credentials.json
 assets/includes/app/core.php
