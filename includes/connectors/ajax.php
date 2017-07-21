@@ -1,13 +1,12 @@
 <?php
 //header('Content-Type: application/json');
-
 //Security: check token
 session_start();
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 $headers = apache_request_headers();
-if (!isset($headers['CsrfToken']) || $headers['CsrfToken'] !== $_SESSION['csrf_token']) {
+if (!isset($headers['csrftoken']) || $headers['csrftoken'] !== $_SESSION['csrf_token']) {
   exit(json_encode(['error' => 'Token error.']));
 }
 //Security: check referrer

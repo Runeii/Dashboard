@@ -1,4 +1,6 @@
 <?php
+error_reporting(-1);
+ini_set('display_errors', 'On');
   session_start();
   if (empty($_SESSION['csrf_token'])) {
       $_SESSION['csrf_token'] = bin2hex(random_bytes(32));

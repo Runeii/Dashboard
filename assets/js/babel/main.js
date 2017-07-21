@@ -31,7 +31,7 @@ $('[data-client]').click(function () {
   var widget = {
     'nonce': 'test',
     'client': type,
-    'file': ['social-overview', 'network-overview', 'website-referrals', 'website-pages']
+    'file': ['social-overview', 'website-referrals', 'website-pages']
   };
   $('.brand.active').removeClass('active');
   $(this).addClass('loading');

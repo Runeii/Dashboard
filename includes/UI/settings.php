@@ -41,7 +41,7 @@
 </article>
 
 <?php
-function facebook_options($current = ''){
+function facebook_options($current = array('facebook'=> '')){
   global $database;
   $facebook = $database->facebook_get_pages();
   $output = '<select name="facebook">';
@@ -53,7 +53,7 @@ function facebook_options($current = ''){
   $output .= '</td>';
   return $output;
 }
-function analytics_options($current = ''){
+function analytics_options($current = array('analytics'=> '')){
   global $database;
   $analytics = $database->analytics_get_sites();
   $output = '<select name="analytics">';
