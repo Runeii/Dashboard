@@ -12,6 +12,13 @@ class WebsiteReferrals extends GBWidget{
     $this->icon = 'fa-filter';
     $this->id = 'website-referrals';
     $this->chart_type = 'doughnut';
+    $this->section = array(
+      'title' => 'Website Traffic',
+      'desc' => 'Where website visitors come from and where they go',
+      'date' => false,
+      'id' => 'webtraffic'
+    );
+    $this->outputSection();
     $this->outputWidget();
   }
 

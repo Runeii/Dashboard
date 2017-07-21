@@ -1,13 +1,27 @@
 <?php
-class SocialFollowers extends GBWidget{
+class SocialOverview extends GBWidget{
 
   function __construct(){
     parent::__construct();
     $this->title = 'Follower growth';
     $this->id = 'social-followers';
     $this->chart_type = 'line';
-
+    $this->dateranges = array(
+      'now' => array($this->daterange, null),
+      'quarter' => array(14,null),
+      'year' => array(28,7)
+    );
+    $this->section = array(
+      'id' => 'socialoverview',
+      'title' => 'Social Overview',
+      'desc' => 'Social network performance at a glance',
+      'date' => true
+    );
+    $this->outputSection();
     $this->outputWidget();
+    include('./network-overview.php');
+    new NetworkOverview();
+    echo $this->closeWidget();
   }
   //
   //Format data
@@ -53,5 +67,5 @@ class SocialFollowers extends GBWidget{
 
 }
 
-new SocialFollowers();
+new SocialOverview();
 ?>

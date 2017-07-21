@@ -1,7 +1,7 @@
 <?php
 class NetworkOverview extends GBWidget{
   public $dateranges;
-
+  protected $id;
   function __construct(){
     parent::__construct();
     $this->dateranges = array(
@@ -10,8 +10,8 @@ class NetworkOverview extends GBWidget{
       'year' => array(28,7)
     );
     $this->chart_type = 'line';
-
     $this->outputWidget();
+    $this->closeSection();
   }
   //
   //Output HTML
@@ -21,20 +21,20 @@ class NetworkOverview extends GBWidget{
     foreach($this->networks as $network => $id) {
         $this->id = 'network-overview-'. $network;
         $this->title = $network;
+        $this->id = $id;
         $this->icon = 'fa-' . $network;
+        echo '<article id="'. $this->title .'">';
         echo $this->buildWidgetHeader();
         $this->widgetBody();
-        echo $this->closeWidget();
+        echo '</article>';
     }
     echo '</div>';
   }
   function buildWidgetHeader($id = false, $icon = false, $title = false){
-    $output = '<article id="'. $this->id .'">';
-    $output .= '<div class="bar">';
-    $output .= '<h5><i class="fa '. $this->icon .'" aria-hidden="true"></i>'. $this->title .'</h5>';
-    $output .= '<h5 class="tab active" data-navigate="setDate" data-navtype="action">now</h5>
-                <h5 class="tab" data-navigate="setDate" data-navtype="action">quarter</h5>
-                <h5 class="tab" data-navigate="setDate" data-navtype="action">year</h5>';
+    $output = '<div class="bar">';
+    $output .= '<i class="fa '. $this->icon .'" aria-hidden="true"></i>';
+    $output .= '<h5>'. ucfirst($this->title) .'</h5>';
+    $output .= '<p>'. $this->id .'</p>';
     $output .= '</div>';
     return $output;
   }
@@ -44,9 +44,10 @@ class NetworkOverview extends GBWidget{
     foreach($this->dateranges as $range => $dates) {
       $dataset[$range] = $this->{$function}($dates[0], $dates[1]);
     }
-    echo '<div class="body">';
+    echo '<ul class="body">';
     foreach($dataset['now'] as $name => $stat) {
-      echo '<div class="statistic"><h4 data-now="'. $stat .'" ';
+      echo '<li>';
+      echo '<div class="statistic"><h5 data-now="'. $stat .'" ';
       if(array_key_exists($name, $dataset['quarter'])) {
         echo 'data-quarter="'. $dataset['quarter'][$name] .'"';
       } else {
@@ -57,10 +58,11 @@ class NetworkOverview extends GBWidget{
       } else {
         echo 'data-year="0"';
       }
-      echo '>' . number_format($stat) .'</h4>';
-      echo '<caption>'. ucfirst($name) .'</caption></div>';
+      echo '>' . number_format($stat) .'</h5>';
+      echo '<span class="statcaption">'. ucfirst($name) .'</span></div>';
+      echo '</li>';
     }
-    echo '</div>';
+    echo '</ul>';
   }
   //
   //Format data
@@ -76,6 +78,7 @@ class NetworkOverview extends GBWidget{
         $dataset[$metric] += $value;
       }
     }
+    unset($dataset['friends']);
     return $dataset;
   }
 
@@ -114,5 +117,4 @@ class NetworkOverview extends GBWidget{
 
 }
 
-new NetworkOverview();
 ?>

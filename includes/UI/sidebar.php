@@ -1,21 +1,16 @@
-<header>
-  <img src="/assets/img/logo.png" class="logo"/>
-  <ul class="actions">
-    <li data-page="settings">
-      <i class="fa fa-cogs" aria-hidden="true" data-navigate="settings" data-navtype="frame"></i>
-    </li>
-    <li data-action="logout">
-      <i class="fa fa-sign-out" aria-hidden="true" data-navigate="logout" data-navtype="action"></i>
-    </li>
-  </ul>
-</header>
 <nav>
-  <ul class="brands">
+  <ul>
+    <li class="logo">
+      <img src="/assets/img/logo.png" />
+    </li>
     <?php
       $brands = $BrandDB->get_brands();
       foreach($brands as $brand) {
-        echo '<li data-client="true" data-id="'. $brand['id'] .'"><img src="'. $brand['logo'] .'" /></li>';
+        echo '<li data-client="true" data-id="'. $brand['id'] .'" class="brand"><img src="'. $brand['logo'] .'" />'. $brand['name'] .'</li>';
       }
     ?>
+    <li data-page="settings" class="settings" data-navigate="settings" data-navtype="frame">
+      <i class="fa fa-cogs" aria-hidden="true" ></i>Settings
+    </li>
   </ul>
 </nav>

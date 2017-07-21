@@ -38,6 +38,13 @@
       $this->id = 'unidentified';
       $this->icon = 'fa-clock-o';
 
+      $this->section = array(
+        'id' => '',
+        'title' => '',
+        'desc' => false,
+        'date' => false
+      );
+
       $this->setup_daterange();
     }
 
@@ -74,6 +81,9 @@
           'mode' => 'nearest',
           'intersect' => true
         ),
+        'legend' => array(
+          'position' => 'bottom'
+        ),
         'scales' => array( array(
           'xAxes' => array(
             'display' => true,
@@ -103,10 +113,19 @@
     }
     function generate_piecolours($dataset){
       $total = count($dataset);
+      $defaultcolours = array(
+        'rgb(24,96,126)',
+        'rgb(222,67,20)',
+        'rgb(115,252,161)',
+        'rgb(11,40,57)',
+        'rgb(237,232,18)',
+        'rgb(195,12,212)',
+        'rgb(31,196,235)'
+      );
       $i = 0;
       $colours = array();
       while($i < $total) {
-        $colours[] = 'rgba('.rand(0,255).', '.rand(0,255).', '.rand(0,255).', 0.73)';
+        $colours[] = $defaultcolours[$i];
         $i++;
       }
       return $colours;
@@ -115,6 +134,34 @@
     //
     //Output HTML
     //
+    function outputSection(){
+      echo '<section id="'. $this->section['id'] .'">';
+      echo '<header>';
+      echo '<h5>'. $this->section['title'] .'</h5>';
+      if($this->section['desc']) {
+        echo '<p>'. $this->section['desc'] .'</p>';
+      }
+      if($this->section['date']) {
+        echo '<div class="comparison">';
+          echo '<p>Comparison:</p>';
+          echo '<select>';
+          foreach($this->dateranges as $date => $value) {
+            if($date == 'now') {
+              echo '<option name="'. $date .'" value="now">None</option>';
+
+            } else {
+              echo '<option name="'. $date .'" value="'. $date .'">vs '. $date .'</option>';
+
+            }
+          }
+          echo '</select>';
+        echo '</div>';
+      }
+      echo '</header>';
+    }
+    function closeSection(){
+      echo '</section>';
+    }
     function outputWidget(){
       echo $this->buildWidgetHeader();
       echo '<div class="body">';
@@ -128,10 +175,7 @@
       $title = $title ?: $this->title;
 
       return '<article id="'. $id .'">
-              <h5>
-                <i class="fa '. $icon .'" aria-hidden="true"></i>
-                '. $title .'
-              </h5>';
+              <h5>'. $title .'</h5>';
     }
     function closeWidget(){
       return '</article>';
@@ -171,9 +215,9 @@
       $dataset = array(
         'labels' => $this->dates,
         'datasets' => array(
-          $this->create_source('Twitter', $this->format_twitterstats(), 'rgb(51,51,51)', 'rgba(51,51,51,0.6)'),
-          $this->create_source('Facebook', $this->format_facebookstats(), 'rgb(59,89,152)', 'rgba(59,89,152,0.6)'),
-          $this->create_source('Instagram', $this->format_instagramstats(), 'rgb(205,72,107)', 'rgba(205,72,107,0.6)')
+          $this->create_source('Twitter', $this->format_twitterstats(), 'rgb(51,51,51)'),
+          $this->create_source('Facebook', $this->format_facebookstats(), 'rgb(59,89,152)'),
+          $this->create_source('Instagram', $this->format_instagramstats(), 'rgb(205,72,107)')
         )
       );
       return json_encode($dataset);

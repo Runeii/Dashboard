@@ -1,6 +1,6 @@
 <?php include('../app/core.php'); ?>
 <article class="settings-form">
-  <table id="client_table">
+  <table id="client_table" cellspacing="0">
       <tr>
           <th class="idholder">ID</th>
           <th>Name</th>
