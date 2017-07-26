@@ -1,10 +1,17 @@
 <?php include('../app/core.php'); ?>
-<article class="settings-form">
+<section class="settings-form">
+  <header>
+    <h5>Manage Brands</h5>
+    <p>Add and remove brands from Dashboard system</p>
+  </header>
+  <div class="controls">
+    <input type="button" id="add_client_row" value="Add new brand" onclick="insert_row()"/>
+    <input type="button" id="save_changes" value="Save Changes" onclick="save_changes()"/>
+  </div>
   <table id="client_table" cellspacing="0">
       <tr>
           <th class="idholder">ID</th>
-          <th>Name</th>
-          <th>Logo</th>
+          <th>Details</th>
           <th>Facebook</th>
           <th>Twitter</th>
           <th>Analytics</th>
@@ -13,12 +20,11 @@
       </tr>
       <tr class="hiddenrow">
         <td class="idholder"><input type="text" name="id" disabled /></td>
-        <td><input type="text" name="name" /></td>
-        <td><input type="text" name="logo" /></td>
+        <td><input type="text" name="name" placeholder="{{Name}}" /><input type="text" name="logo" placeholder="{{Logo URL}}" /></td>
         <td><?php echo facebook_options(); ?></td>
-        <td><input type="text" name="twitter" /></td>
+        <td><input type="text" name="twitter" placeholder="eg: 'hoochlemonbrew'" /></td>
         <td><?php echo analytics_options(); ?></td>
-        <td><input type="text" name="instagram" /></td>
+        <td><input type="text" name="instagram" placeholder="eg: 'hoochlemonbrew'" /></td>
         <td><button data-action="deleteClient"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
       </tr>
       <?php
@@ -27,8 +33,11 @@
         foreach($brands as $brand) {
           echo '<tr class="inputrow">
                   <td class="idholder"><input type="text" name="id" value="'. $brand['id'] .'" disabled /></td>
-                  <td><input type="text" name="name" value="'. $brand['name'] .'" /></td>
-                  <td><input type="text" name="logo" value="'. $brand['logo'] .'" /></td>
+                  <td>
+                    <img src="'. $brand['logo'] .'" class="brandlogo" />
+                    <input type="text" name="name" value="'. $brand['name'] .'" class="h5" /><span class="pencilmarker"></span><br />
+                    <input type="text" name="logo" value="'. $brand['logo'] .'" /><span class="pencilmarker"></span>
+                  </td>
                   <td>'. facebook_options($brand) .'</td>
                   <td><input type="text" name="twitter" value="'. $brand['twitter'] .'" /></td>
                   <td>'. analytics_options($brand) .'</td>
@@ -39,9 +48,7 @@
         }
       ?>
   </table>
-  <input type="button" id="add_client_row" value="Add new brand" onclick="insert_row()"/>
-  <input type="button" id="save_changes" value="Save Changes" onclick="save_changes()"/>
-</article>
+</section>
 
 <?php
 function facebook_options($current = array('facebook'=> '')){
@@ -117,7 +124,8 @@ function analytics_options($current = array('analytics'=> '')){
       'load' : data,
     };
     $.post( 'includes/connectors/ajax.php', request, function(response) {
-      console.log(response);
+      console.log('Success. Reloading');
+      location.reload();
     });
   }
 </script>

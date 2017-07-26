@@ -6,6 +6,10 @@ $modularscale: (
   ratio: 1.5
 );
 
+$mobile: '480px';
+$tablet: '680px';
+$smallscreen: '1060px';
+
 $frame_bg: rgb(31,91,116);
 $widget_bg: #ffffff;
 $main_bg: #eef1f5;
@@ -44,24 +48,24 @@ h1,h2,h3,h4,h5 {
   font-family: $header-font;
   color:$darkblue;
 }
-h1 {
+h1, .h1 {
   margin-top:0;
   font-size: ms(5);
   line-height: ms(6);
 }
-h2 {
+h2, .h2 {
   font-size: ms(4);
   line-height: ms(5);
 }
-h3 {
+h3, .h3 {
   font-size: ms(3);
   line-height: ms(4);
 }
-h4 {
+h4, .h4 {
   font-size: ms(2);
   line-height: ms(3);
 }
-h5 {
+h5, .h5 {
   font-size: ms(1);
   line-height: ms(2);
 }
@@ -105,6 +109,16 @@ nav {
   position: fixed;
   top:0;
   left:0;
+  .logo {
+    background-color: $darkblue;
+    padding: ms(2) ms(1);
+    transition:width 0s;
+    img {
+      width:100%;
+      opacity: 1;
+      transition:width 0s;
+    }
+  }
   ul {
     margin: 0;
     padding:0;
@@ -124,12 +138,13 @@ nav {
         margin-right:ms(0);
         opacity:0.6;
         transition: filter 0.5s ease-out;
-        filter: grayscale(100%);
+        filter: grayscale(100%) contrast(0%) brightness(100%);
       }
       &:not(.active):hover {
         background-color: rgba(0,0,0,0.2);
+        color:white;
         img {
-          filter: grayscale(0%);
+          filter: grayscale(100%) contrast(0%) brightness(200%)
         }
       }
       &.active {
@@ -137,18 +152,8 @@ nav {
         color:white;
         img {
           opacity:1;
-          filter: grayscale(0%);
+          filter: grayscale(0%) contrast(100%) brightness(100%);
         }
-      }
-    }
-    .logo {
-      background-color: $darkblue;
-      padding: ms(2) ms(1);
-      transition:width 0s;
-      img {
-        width:100%;
-        opacity: 1;
-        transition:width 0s;
       }
     }
     .settings {
@@ -217,37 +222,79 @@ main {
     }
   }
 }
-@media screen and (max-width:960px) {
-  nav {
-    li:not(.logo) {
-      img {
+@media screen and (max-width:$mobile) {
+  main {
+    > section {
+      .comparison {
         display:none;
       }
     }
   }
 }
-@media screen and (max-width:680px) {
+@media screen and (max-width:$tablet) {
   main {
     width:100%;
     padding-top:calc(#{ms(4)} + #{ms(0)});
   }
-  nav:not(:hover) {
+  nav {
     overflow: hidden;
     height:auto;
     width:100%;
     max-width:100%;
-    bottom:calc(100% - (#{ms(4)} + #{ms(0)}));
-    ul {
-      .logo {
-        width:20%;
+    height: ms(4);
+    .logo {
+      width:50%;
+      height:100%;
+      padding:0;
+      display: inline-flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      img {
+        max-height: 100%;
+        width:calc(100% - #{ms(2)});
       }
-      li:not(.logo) {
-        img {
-          display:none;
+    }
+    ul {
+      width:50%;
+      overflow: hidden;
+      max-height: ms(4);
+      height:ms(4);
+      position: fixed;
+      left:50%;
+      top:0;
+      transition: max-height 1s ease-in-out;
+      z-index:10;
+      background-color: $companyblue;
+      display: flex;
+      flex-direction: column;
+      li {
+        height: ms(4);
+        min-height: ms(4);
+        color:white;
+        order:2;
+        &:not(.active):hover {
+          background-color: rgba(0,0,0,0.2);
+        }
+        &.active {
+          order:1;
         }
       }
       .settings {
         position: relative;
+      }
+      &:hover {
+        max-height: 999px;
+        height:999px;
+      }
+    }
+  }
+}
+@media screen and (max-width:$smallscreen) {
+  nav {
+    li {
+      img {
+        display:none;
       }
     }
   }
@@ -313,6 +360,12 @@ article, #network-overview {
     }
   }
 }
+@media screen and (max-width:$mobile) {
+  article {
+    margin-right:0;
+  }
+}
+
 
 
 ////WIDGETS
@@ -412,7 +465,7 @@ article, #network-overview {
     }
   }
 }
-@media screen and (max-width:960px) {
+@media screen and (max-width:$smallscreen) {
   #socialoverview {
     flex-direction: column;
   }
@@ -422,6 +475,22 @@ article, #network-overview {
   }
   #social-followers {
     order:3;
+  }
+}
+@media screen and (max-width:$mobile) {
+  #network-overview {
+    flex-direction: column;
+    article {
+      width:100%;
+      margin-bottom:ms(1);
+    }
+  }
+  #social-followers {
+    visibility: hidden;
+    display: inline;
+    height:0px;
+    padding:0;
+    margin:0;
   }
 }
 #website-referrals {
@@ -448,8 +517,28 @@ article, #network-overview {
     }
   }
 }
+#website-popular-list, #website-landing-list {
+  width:calc(50% - (#{ms(1) / 2}));
+}
 #website-landing-list {
   z-index:3;
+  margin-right:0;
+}
+@media screen and (max-width:$mobile) {
+  #website-referrals {
+    .body {
+      flex-direction: column;
+      h5 {
+        margin-bottom:ms(2);
+      }
+      .overview, .details {
+        width:100%;
+      }
+    }
+  }
+  #website-popular-list, #website-landing-list {
+    width:100%;
+  }
 }
 
 //
@@ -457,9 +546,49 @@ article, #network-overview {
 //
 .settings-form {
   width: calc(100% - #{ms(0)});
+  flex-direction: column;
+  .controls {
+    padding-left:ms(6);
+    input {
+      background-color:$altgrey;
+      border:1px solid $altgrey;
+      border-radius:20px;
+      padding:ms(0);
+      cursor:pointer;
+      font-weight:bold;
+      &:hover {
+        background-color:$grey;
+      }
+      &:focus {
+        outline: none;
+      }
+      &:not(:nth-child(1)){
+        margin-left:ms(1);
+      }
+    }
+  }
   #client_table {
+    position: relative;
     .hiddenrow, .idholder, .deleted {
       display: none;
+    }
+    tr {
+      background-color: $widget_bg;
+      padding:ms(1);
+      margin:ms(1) 0 0 ms(6);
+      display: block;
+      position: relative;
+      &:nth-child(1){
+        display:none;
+      }
+      .brandlogo {
+        position: absolute;
+        right:calc(100% + (#{ms(1)} * 2));
+        top:50%;
+        transform:translateY(-50%);
+        width:ms(5);
+        height:auto;
+      }
     }
     th {
       text-align: left;
@@ -467,7 +596,32 @@ article, #network-overview {
     }
     td {
       text-align: left;
-      padding:0;
+      position: relative;
+      padding:ms(2) ms(2) ms(1) 0;
+      &::before{
+        position: absolute;
+        top:0;
+        left:0;
+        font-weight:bold;
+      }
+      &:nth-child(2)::before{
+        content: 'Details';
+      }
+      &:nth-child(3)::before{
+        content: 'Facebook';
+      }
+      &:nth-child(4)::before{
+        content: 'Twitter';
+      }
+      &:nth-child(5)::before{
+        content: 'Analytics';
+      }
+      &:nth-child(6)::before{
+        content: 'Instagram';
+      }
+      &:nth-child(7)::before{
+        content: 'Delete';
+      }
     }
     img {
       height:6rem;
@@ -476,8 +630,12 @@ article, #network-overview {
     input, select {
       background-color:transparent;
       padding:0;
-      border-right:3px solid transparent;
+      border:none;
       width:100%;
+      position: relative;
+    }
+    .h5 {
+      font-weight:bold;
     }
   }
 }

@@ -88,7 +88,6 @@ function swapPage(data) {
 function logout() {
   body.style.opacity = '0';
 }
-function updateWidgetDate(el) {}
 //
 
 

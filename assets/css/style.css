@@ -226,24 +226,24 @@ h1, h2, h3, h4, h5 {
   font-family: open-sans, helvetica, sans-serif;
   color: #0b2839; }
 
-h1 {
+h1, .h1 {
   margin-top: 0;
   font-size: 106px;
   line-height: 159px; }
 
-h2 {
+h2, .h2 {
   font-size: 71px;
   line-height: 106px; }
 
-h3 {
+h3, .h3 {
   font-size: 47px;
   line-height: 71px; }
 
-h4 {
+h4, .h4 {
   font-size: 32px;
   line-height: 47px; }
 
-h5 {
+h5, .h5 {
   font-size: 21px;
   line-height: 32px; }
 
@@ -286,6 +286,14 @@ nav {
   position: fixed;
   top: 0;
   left: 0; }
+  nav .logo {
+    background-color: #0b2839;
+    padding: 32px 21px;
+    transition: width 0s; }
+    nav .logo img {
+      width: 100%;
+      opacity: 1;
+      transition: width 0s; }
   nav ul {
     margin: 0;
     padding: 0; }
@@ -305,25 +313,18 @@ nav {
         margin-right: 14px;
         opacity: 0.6;
         transition: filter 0.5s ease-out;
-        filter: grayscale(100%); }
+        filter: grayscale(100%) contrast(0%) brightness(100%); }
       nav ul li:not(.active):hover {
-        background-color: rgba(0, 0, 0, 0.2); }
+        background-color: rgba(0, 0, 0, 0.2);
+        color: white; }
         nav ul li:not(.active):hover img {
-          filter: grayscale(0%); }
+          filter: grayscale(100%) contrast(0%) brightness(200%); }
       nav ul li.active {
         background-color: #1fc4eb;
         color: white; }
         nav ul li.active img {
           opacity: 1;
-          filter: grayscale(0%); }
-    nav ul .logo {
-      background-color: #0b2839;
-      padding: 32px 21px;
-      transition: width 0s; }
-      nav ul .logo img {
-        width: 100%;
-        opacity: 1;
-        transition: width 0s; }
+          filter: grayscale(0%) contrast(100%) brightness(100%); }
     nav ul .settings {
       position: absolute;
       bottom: 0;
@@ -379,26 +380,62 @@ main {
         outline: none;
         border: 1px solid #f0f3f6; }
 
-@media screen and (max-width: 960px) {
-  nav li:not(.logo) img {
+@media screen and (max-width: 480px) {
+  main > section .comparison {
     display: none; } }
 
 @media screen and (max-width: 680px) {
   main {
     width: 100%;
     padding-top: calc(71px + 14px); }
-  nav:not(:hover) {
+  nav {
     overflow: hidden;
     height: auto;
     width: 100%;
     max-width: 100%;
-    bottom: calc(100% - (71px + 14px)); }
-    nav:not(:hover) ul .logo {
-      width: 20%; }
-    nav:not(:hover) ul li:not(.logo) img {
-      display: none; }
-    nav:not(:hover) ul .settings {
-      position: relative; } }
+    height: 71px; }
+    nav .logo {
+      width: 50%;
+      height: 100%;
+      padding: 0;
+      display: inline-flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center; }
+      nav .logo img {
+        max-height: 100%;
+        width: calc(100% - 32px); }
+    nav ul {
+      width: 50%;
+      overflow: hidden;
+      max-height: 71px;
+      height: 71px;
+      position: fixed;
+      left: 50%;
+      top: 0;
+      transition: max-height 1s ease-in-out;
+      z-index: 10;
+      background-color: #18607e;
+      display: flex;
+      flex-direction: column; }
+      nav ul li {
+        height: 71px;
+        min-height: 71px;
+        color: white;
+        order: 2; }
+        nav ul li:not(.active):hover {
+          background-color: rgba(0, 0, 0, 0.2); }
+        nav ul li.active {
+          order: 1; }
+      nav ul .settings {
+        position: relative; }
+      nav ul:hover {
+        max-height: 999px;
+        height: 999px; } }
+
+@media screen and (max-width: 1060px) {
+  nav li img {
+    display: none; } }
 
 article, #network-overview {
   background-color: #ffffff;
@@ -445,6 +482,10 @@ article, #network-overview {
         padding-right: 21px; }
       article table td:last-child, article table th:last-child, #network-overview table td:last-child, #network-overview table th:last-child {
         text-align: right; }
+
+@media screen and (max-width: 480px) {
+  article {
+    margin-right: 0; } }
 
 #social-followers .body {
   display: flex;
@@ -524,7 +565,7 @@ article, #network-overview {
       display: block;
       opacity: 0.6; }
 
-@media screen and (max-width: 960px) {
+@media screen and (max-width: 1060px) {
   #socialoverview {
     flex-direction: column; }
   #social-followers, #network-overview {
@@ -532,6 +573,19 @@ article, #network-overview {
     order: 2; }
   #social-followers {
     order: 3; } }
+
+@media screen and (max-width: 480px) {
+  #network-overview {
+    flex-direction: column; }
+    #network-overview article {
+      width: 100%;
+      margin-bottom: 21px; }
+  #social-followers {
+    visibility: hidden;
+    display: inline;
+    height: 0px;
+    padding: 0;
+    margin: 0; } }
 
 #website-referrals {
   width: 100%;
@@ -553,27 +607,95 @@ article, #network-overview {
     #website-referrals .details .graph:first-child {
       padding-bottom: 47px; }
 
+#website-popular-list, #website-landing-list {
+  width: calc(50% - (10.5px)); }
+
 #website-landing-list {
-  z-index: 3; }
+  z-index: 3;
+  margin-right: 0; }
+
+@media screen and (max-width: 480px) {
+  #website-referrals .body {
+    flex-direction: column; }
+    #website-referrals .body h5 {
+      margin-bottom: 32px; }
+    #website-referrals .body .overview, #website-referrals .body .details {
+      width: 100%; }
+  #website-popular-list, #website-landing-list {
+    width: 100%; } }
 
 .settings-form {
-  width: calc(100% - 14px); }
-  .settings-form #client_table .hiddenrow, .settings-form #client_table .idholder {
-    display: none; }
-  .settings-form #client_table th {
-    text-align: left;
-    font-weight: 700; }
-  .settings-form #client_table td {
-    text-align: left;
-    padding: 0; }
-  .settings-form #client_table img {
-    height: 6rem;
-    margin: 0 auto; }
-  .settings-form #client_table input, .settings-form #client_table select {
-    background-color: transparent;
-    padding: 0;
-    border-right: 3px solid transparent;
-    width: 100%; }
+  width: calc(100% - 14px);
+  flex-direction: column; }
+  .settings-form .controls {
+    padding-left: 159px; }
+    .settings-form .controls input {
+      background-color: #d7dde4;
+      border: 1px solid #d7dde4;
+      border-radius: 20px;
+      padding: 14px;
+      cursor: pointer;
+      font-weight: bold; }
+      .settings-form .controls input:hover {
+        background-color: #f0f3f6; }
+      .settings-form .controls input:focus {
+        outline: none; }
+      .settings-form .controls input:not(:nth-child(1)) {
+        margin-left: 21px; }
+  .settings-form #client_table {
+    position: relative; }
+    .settings-form #client_table .hiddenrow, .settings-form #client_table .idholder, .settings-form #client_table .deleted {
+      display: none; }
+    .settings-form #client_table tr {
+      background-color: #ffffff;
+      padding: 21px;
+      margin: 21px 0 0 159px;
+      display: block;
+      position: relative; }
+      .settings-form #client_table tr:nth-child(1) {
+        display: none; }
+      .settings-form #client_table tr .brandlogo {
+        position: absolute;
+        right: calc(100% + (21px * 2));
+        top: 50%;
+        transform: translateY(-50%);
+        width: 106px;
+        height: auto; }
+    .settings-form #client_table th {
+      text-align: left;
+      font-weight: 700; }
+    .settings-form #client_table td {
+      text-align: left;
+      position: relative;
+      padding: 32px 32px 21px 0; }
+      .settings-form #client_table td::before {
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-weight: bold; }
+      .settings-form #client_table td:nth-child(2)::before {
+        content: 'Details'; }
+      .settings-form #client_table td:nth-child(3)::before {
+        content: 'Facebook'; }
+      .settings-form #client_table td:nth-child(4)::before {
+        content: 'Twitter'; }
+      .settings-form #client_table td:nth-child(5)::before {
+        content: 'Analytics'; }
+      .settings-form #client_table td:nth-child(6)::before {
+        content: 'Instagram'; }
+      .settings-form #client_table td:nth-child(7)::before {
+        content: 'Delete'; }
+    .settings-form #client_table img {
+      height: 6rem;
+      margin: 0 auto; }
+    .settings-form #client_table input, .settings-form #client_table select {
+      background-color: transparent;
+      padding: 0;
+      border: none;
+      width: 100%;
+      position: relative; }
+    .settings-form #client_table .h5 {
+      font-weight: bold; }
 
 *[data-navigate] {
   cursor: pointer; }
