@@ -169,13 +169,15 @@
       echo '</div>';
       echo $this->closeWidget();
     }
-    function buildWidgetHeader($id = false, $icon = false, $title = false){
+    function buildWidgetHeader($id = false, $title = false){
       $id = $id ?: $this->id;
-      $icon = $icon ?: $this->icon;
-      $title = $title ?: $this->title;
+      $output = '<article id="'. $id .'">';
+      if($this->title !== '') {
+        $title = $title ?: $this->title;
+        $output .= '<h5>'. $title .'</h5>';
+      }
 
-      return '<article id="'. $id .'">
-              <h5>'. $title .'</h5>';
+      return $output;
     }
     function closeWidget(){
       return '</article>';

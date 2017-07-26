@@ -312,7 +312,7 @@ article, #network-overview {
   canvas {
     width:100%;
   }
-  > h5 {
+  h5 {
     margin:ms(1) 0 0 ms(1);
     background-color: $widget_bg;
     position: relative;
@@ -506,13 +506,23 @@ article, #network-overview {
     padding:0;
     width:40%;
     position: relative;
+    h5 {
+      margin: 0;
+      text-align: center;
+      margin-bottom: ms(2);
+    }
   }
   .details {
     width:20%;
     padding:ms(3) 0;
     display: flex;
     flex-direction: column;
-    .graph:first-child {
+    h5 {
+      margin: 0;
+      text-align: center;
+      margin-bottom: ms(2);
+    }
+    .graph:nth-of-type(1) {
       padding-bottom:ms(3);
     }
   }

@@ -8,7 +8,7 @@ class WebsiteReferrals extends GBWidget{
     parent::__construct();
     $this->format_data();
 
-    $this->title = 'Referrals';
+    $this->title = '';
     $this->icon = 'fa-filter';
     $this->id = 'website-referrals';
     $this->chart_type = 'doughnut';
@@ -26,13 +26,15 @@ class WebsiteReferrals extends GBWidget{
     $this->id = 'website-referrals-overview';
     $this->setname = 'overview';
     echo '<div class="overview">
+            <h5>All website referrals</h5>
             <canvas id="'. $this->id .'-chart" width="400" height="400"></canvas>
           </div>';
     $this->build_chart();
     echo '<div class="details">';
       $this->id = 'website-referrals-social';
       $this->setname = 'social';
-      echo '<div class="graph"><canvas id="'. $this->id .'-chart" width="400" height="400"></canvas></div>';
+      echo '<h5>Social sources</h5>
+            <div class="graph"><canvas id="'. $this->id .'-chart" width="400" height="400"></canvas></div>';
       $this->build_chart();
 
       $this->id = 'website-referrals-historic';

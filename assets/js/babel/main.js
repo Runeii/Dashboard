@@ -16,7 +16,7 @@ $(document).ready(function () {
 //Setup CSRF security for AJAX
 $.ajaxSetup({
   headers: {
-    'csrftoken': $('meta[name="csrf-token"]').attr('content')
+    'Csrftoken': $('meta[name="csrf-token"]').attr('content')
   }
 });
 

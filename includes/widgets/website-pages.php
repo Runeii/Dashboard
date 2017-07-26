@@ -12,12 +12,12 @@ class WebsitePages extends GBWidget{
     $this->print_landingpages();
   }
   function print_popular(){
-    echo $this->buildWidgetHeader('website-popular-list', 'fa-fire', 'Most popular pages');
+    echo $this->buildWidgetHeader('website-popular-list', 'Most popular pages');
     echo '<table cellspacing="0" cellpadding="0">'. $this->build_list('pages') .'</table>';
     echo $this->closeWidget();
   }
   function print_landingpages(){
-    echo $this->buildWidgetHeader('website-landing-list', 'fa-plane', 'Most popular landing pages');
+    echo $this->buildWidgetHeader('website-landing-list', 'Most popular landing pages');
     echo '<table cellspacing="0" cellpadding="0">'. $this->build_list('landingpages') .'</table>';
     echo $this->closeWidget();
   }
