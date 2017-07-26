@@ -458,7 +458,7 @@ article, #network-overview {
 .settings-form {
   width: calc(100% - #{ms(0)});
   #client_table {
-    .hiddenrow, .idholder {
+    .hiddenrow, .idholder, .deleted {
       display: none;
     }
     th {

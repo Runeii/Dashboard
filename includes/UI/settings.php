@@ -9,6 +9,7 @@
           <th>Twitter</th>
           <th>Analytics</th>
           <th>Instagram</th>
+          <th>Delete</th>
       </tr>
       <tr class="hiddenrow">
         <td class="idholder"><input type="text" name="id" disabled /></td>
@@ -18,6 +19,7 @@
         <td><input type="text" name="twitter" /></td>
         <td><?php echo analytics_options(); ?></td>
         <td><input type="text" name="instagram" /></td>
+        <td><button data-action="deleteClient"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
       </tr>
       <?php
         $brands = $BrandDB->get_brands();
@@ -31,6 +33,7 @@
                   <td><input type="text" name="twitter" value="'. $brand['twitter'] .'" /></td>
                   <td>'. analytics_options($brand) .'</td>
                   <td><input type="text" name="instagram" value="'. $brand['instagram'] .'" /></td>
+                  <td><button onclick="delete_row(event)"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
                 </tr>';
           $i++;
         }
@@ -80,9 +83,12 @@ function analytics_options($current = array('analytics'=> '')){
     // Append
     x.appendChild( new_row_el );
   }
+  function delete_row(event){
+    var row = $(event.target).parents('tr');
+    row.addClass('deleted');
+  }
   function save_changes(){
     var rows = document.getElementById('client_table').querySelectorAll('.inputrow');
-    console.log(rows);
     var data = [];
     for (var i=0, l=rows.length; i<l; i++) {
       data[i] = {};
@@ -97,6 +103,12 @@ function analytics_options($current = array('analytics'=> '')){
       for (var p=0, r=selects.length; p<r; p++) {
         var name = selects[p].name;
         data[i][name] = selects[p].options[selects[p].selectedIndex].value;
+      }
+      //Mark those for deletion
+      if(rows[i].classList.contains('deleted')) {
+        data[i]['action'] = 'delete';
+      } else {
+        data[i]['action'] = 'update';
       }
     }
     console.log(data);

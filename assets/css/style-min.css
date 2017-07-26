@@ -558,7 +558,7 @@ article, #network-overview {
 
 .settings-form {
   width: calc(100% - 14px); }
-  .settings-form #client_table .hiddenrow, .settings-form #client_table .idholder {
+  .settings-form #client_table .hiddenrow, .settings-form #client_table .idholder, .settings-form #client_table .deleted {
     display: none; }
   .settings-form #client_table th {
     text-align: left;

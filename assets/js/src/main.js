@@ -14,13 +14,10 @@ $(document).ready(function(){
 //Setup CSRF security for AJAX
 $.ajaxSetup({
     headers : {
-        'CsrfToken': $('meta[name="csrf-token"]').attr('content')
+        'csrftoken': $('meta[name="csrf-token"]').attr('content')
     }
 });
 
-var actions = {
-  logout: logout
-};
 //
 /// Navigation System
 //
@@ -42,17 +39,15 @@ $('[data-client]').click(function(){
 function pageEventHandlers(el){
 
   $(el + ' [data-navigate]').click(function(el){
-    var type = $(this).data('navtype');
     var location = $(this).data('navigate');
-    if(type === 'frame') {
-      $.get('includes/UI/' + location + '.php', function(result){
-        swapPage(result);
-      });
-    } else if (type === 'action') {
-      actions[location](el);
-    }
+    $.get('includes/UI/' + location + '.php', function(result){
+      swapPage(result);
+    });
   });
-
+  $(el + ' [data-action]').click(function(el){
+    var action = $(this).data('action');
+    window[action](el);
+  });
   $( ".comparison select" ).change(function() {
     var newdate = $(this).val();
     var parent = $(this).parents('section');

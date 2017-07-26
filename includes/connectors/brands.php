@@ -5,10 +5,15 @@ class Brands {
     if(is_array($data)) {
       foreach($data as $brand) {
         //If ID isn't set, row doesn't already exist so autoincrement
-        if($brand['id'] == '') {
-          unset($brand['id']);
+        if($brand['action'] == 'delete') {
+          DB::delete('brands', "id=%s", $brand['id']);
+        } else {
+          unset($brand['action']);
+          if($brand['id'] == '') {
+            unset($brand['id']);
+          }
+          DB::replace('brands', $brand);
         }
-        DB::replace('brands', $brand);
       }
     }
     return DB::insertId();
